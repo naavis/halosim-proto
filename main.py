@@ -35,12 +35,12 @@ def main():
             ray[0] * np.sin(-SUN_AZIMUTH) + ray[2] * np.cos(-SUN_AZIMUTH)
         ])
 
-        visible_triangles = []
+        visible_triangles_indices = []
         for triangle_idx, triangle in enumerate(triangles):
             normal = normals[:, triangle_idx]
             dot_product = np.dot(normal, ray)
             if dot_product > 0.0:
-                visible_triangles.append(triangle_idx)
+                visible_triangles_indices.append(triangle_idx)
 
         if PLOT_EVERY_CRYSTAL:
             halosim.plotting.plot_crystal(vertices, triangles, ray)
