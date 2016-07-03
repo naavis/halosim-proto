@@ -31,10 +31,17 @@ def main():
             if dot_product > 0.0:
                 visible_triangles_indices.append(triangle_idx)
                 projected_areas.append(np.cos(dot_product) * areas[triangle_idx])
+
+        # Find intersection point using barycentric coordinates
         hit_triangle_idx = visible_triangles_indices[weighted_choice(projected_areas)]
+        hit_triangle_vertices = vertices[:, triangles[hit_triangle_idx]]
+        bary_a = np.random.rand()
+        bary_b = np.random.rand() * (1.0 - bary_a)
+        bary = np.array([bary_a, bary_b, 1.0 - bary_a - bary_b])
+        intersection = np.dot(hit_triangle_vertices, bary)
 
         if PLOT_EVERY_CRYSTAL:
-            plot_crystal(vertices, triangles, ray)
+            plot_crystal(vertices, triangles, ray, highlight_triangle=hit_triangle_idx, point=intersection)
 
 
 def weighted_choice(weights):
