@@ -2,7 +2,7 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import matplotlib.pyplot as plt
 
 
-def plot_crystal(vertices, triangles, ray, point=None, highlight_triangle=None):
+def plot_crystal(vertices, triangles, ray=None, point=None, highlight_triangle=None):
     """
     Plot given crystal.
     :param highlight_triangle: Highlight triangle with given index.
@@ -21,7 +21,9 @@ def plot_crystal(vertices, triangles, ray, point=None, highlight_triangle=None):
             color = 'r'
         ax.add_collection3d(Poly3DCollection(vertices_in_triangle, facecolors=color, alpha=0.5))
 
-    ax.plot([0.0, 3.0 * ray[2]], [0.0, 3.0 * ray[0]], [0.0, 3.0 * ray[1]], color='k')
+    if ray is not None:
+        ax.plot([0.0, 3.0 * ray[2]], [0.0, 3.0 * ray[0]], [0.0, 3.0 * ray[1]], color='k')
+
     if point is not None:
         ax.scatter(point[2], point[0], point[1], color='r')
 
