@@ -1,11 +1,10 @@
-from mpl_toolkits.mplot3d import Axes3D
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 import matplotlib.pyplot as plt
 
 
 def plot_crystal(vertices, triangles):
     fig = plt.figure()
-    ax = Axes3D(fig)
+    ax = fig.add_subplot(111, projection='3d')
     for triangle in triangles:
         vertices_in_triangle = [vertices[:, triangle].T]
         ax.add_collection3d(Poly3DCollection(vertices_in_triangle))
