@@ -31,10 +31,25 @@ def main():
             if dot_product > 0.0:
                 visible_triangles_indices.append(triangle_idx)
                 projected_areas.append(np.cos(dot_product) * areas[triangle_idx])
+        hit_triangle_idx = visible_triangles_indices[weighted_choice(projected_areas)]
 
         if PLOT_EVERY_CRYSTAL:
             plot_crystal(vertices, triangles, ray)
 
+
+def weighted_choice(weights):
+    """
+    Choose random item with given probabilities.
+    E.g. weighted_choice([1.0, 0.5]) would return 0 twice as often as 1.
+    Based on third implementation in: http://eli.thegreenplace.net/2010/01/22/weighted-random-generation-in-python/
+    :param weights: Probabilities for each element.
+    :return: Index of randomly chosen element.
+    """
+    rnd = np.random.rand() * sum(weights)
+    for i, w in enumerate(weights):
+        rnd -= w
+        if rnd < 0:
+            return i
 
 if __name__ == '__main__':
     main()
