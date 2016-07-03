@@ -91,18 +91,18 @@ def rotate(vertices, rotate_a, rotate_b, rotate_c):
     rasin = np.sin(rotate_a)
     racos = np.cos(rotate_a)
     vertices = np.array([
-        racos * vertices[0, :] - rasin * vertices[1, :],
-        rasin * vertices[0, :] + racos * vertices[1, :],
-        vertices[2, :]
-        ])
+        vertices[0, :],
+        racos * vertices[1, :] - rasin * vertices[2, :],
+        rasin * vertices[1, :] + racos * vertices[2, :]
+    ])
 
     rbsin = np.sin(rotate_b)
     rbcos = np.cos(rotate_b)
     vertices = np.array([
-        vertices[0, :],
-        rbcos * vertices[1, :] - rbsin * vertices[2, :],
-        rbsin * vertices[1, :] + rbcos * vertices[2, :]
-    ])
+        rbcos * vertices[0, :] - rbsin * vertices[1, :],
+        rbsin * vertices[0, :] + rbcos * vertices[1, :],
+        vertices[2, :]
+        ])
 
     rcsin = np.sin(rotate_c)
     rccos = np.cos(rotate_c)
