@@ -21,12 +21,15 @@ def main():
         # Generate ray
         ray = halosim.raytracing.generate_ray(SUN_AZIMUTH, SUN_ALTITUDE)
 
+        # Find triangle to intersect
         visible_triangles_indices = []
+        projected_areas = []
         for triangle_idx, triangle in enumerate(triangles):
             normal = normals[:, triangle_idx]
             dot_product = np.dot(normal, ray)
             if dot_product > 0.0:
                 visible_triangles_indices.append(triangle_idx)
+                projected_areas.append(np.cos(dot_product) * areas[triangle_idx])
 
         if PLOT_EVERY_CRYSTAL:
             halosim.plotting.plot_crystal(vertices, triangles, ray)
