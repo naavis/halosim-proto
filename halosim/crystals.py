@@ -45,6 +45,9 @@ def generate_hexagonal_crystal(rot_a_std, rot_b_std, c_a_ratio):
     # Generate prototype hexagonal crystal with c/a ratio of 1.0 and c axis parallel to y coordinate axis.
     vertices, triangles = generate_hexagonal_prototype_crystal()
 
+    vertices[1, :] = c_a_ratio * vertices[1, :]
+    vertices /= vertices.max()
+
     # Calculate areas
     areas = np.zeros((triangles.shape[0],))
     # Basal faces
@@ -61,8 +64,10 @@ def generate_hexagonal_crystal(rot_a_std, rot_b_std, c_a_ratio):
     # Prism faces
     areas[8:] = 0.5 * c_a_ratio
 
+    # Make sure areas sum to 1.0 for easier probability calculations.
+    areas /= np.sum(areas)
+
     # Rotate vertices of crystal
-    vertices[1, :] = c_a_ratio * vertices[1, :]
     rotate_a = rot_a_std * 2.0 * np.pi * np.random.randn()
     rotate_b = rot_b_std * 2.0 * np.pi * np.random.randn()
     rotate_c = 2.0 * np.pi * np.random.rand()

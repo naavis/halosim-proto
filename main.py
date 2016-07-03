@@ -3,7 +3,7 @@ import halosim.plotting
 import numpy as np
 
 NUM_RAYS = 5
-PLOT_EVERY_CRYSTAL = True
+PLOT_EVERY_CRYSTAL = False
 
 # Alt/az
 SUN_AZIMUTH = np.radians(0.0)
