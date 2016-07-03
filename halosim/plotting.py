@@ -3,6 +3,11 @@ import matplotlib.pyplot as plt
 
 
 def plot_crystal(vertices, triangles):
+    """
+    Plot given crystal.
+    :param vertices: 3xn array of vertex coordinates.
+    :param triangles: nx3 array of vertex indices.
+    """
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     for triangle in triangles:

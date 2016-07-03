@@ -2,6 +2,10 @@ import numpy as np
 
 
 def generate_hexagonal_crystal():
+    """
+    Generate a hexagonal crystal.
+    :return: 3xn array of vertex coordinates and nx3 array of vertex indices to indicate each triangle.
+    """
     angles = 2.0 * np.pi * np.arange(0.0, 1.0, 1.0 / 6.0)
     vertices = np.array([np.cos(angles), np.sin(angles)])
     height = 0.5
@@ -38,6 +42,14 @@ def generate_hexagonal_crystal():
 
 
 def rotate(vertices, rotate_a, rotate_b, rotate_c):
+    """
+    Rotate vertices of a crystal.
+    :param vertices: 3xn ndarray of coordinates.
+    :param rotate_a: Rotation angle around crystal a-axis.
+    :param rotate_b: Rotation angle around crystal b-axis.
+    :param rotate_c: Rotation angle around crystal c-axis.
+    :return: Modified vertex coordinates as 3xn array.
+    """
     rasin = np.sin(rotate_a)
     racos = np.cos(rotate_a)
     vertices = np.array([
@@ -63,3 +75,20 @@ def rotate(vertices, rotate_a, rotate_b, rotate_c):
     ])
 
     return vertices
+
+
+def get_normals(vertices, triangles):
+    """
+    Calculate normals for each triangle in crystal.
+    :param vertices: 3xn array of vertex coordinates.
+    :param triangles: nx3 list of vertex indices.
+    :return: 3xn array of normalized normal vectors.
+    """
+    normals = []
+    for triangle in triangles:
+        vertices_in_triangle = vertices[:, triangle]
+        normal = np.cross(vertices_in_triangle[:, 2] - vertices_in_triangle[:, 0], vertices_in_triangle[:, 1] - vertices_in_triangle[:, 0])
+        normal /= np.linalg.norm(normal)
+        normals.append(normal)
+    normals = np.array(normals).T
+    return normals
