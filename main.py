@@ -2,12 +2,12 @@ import halosim.crystals
 import halosim.plotting
 import numpy as np
 
-NUM_RAYS = 3
-PLOT_EVERY_CRYSTAL = False
+NUM_RAYS = 1
+PLOT_EVERY_CRYSTAL = True
 
-# Alt/az in degrees
-SUN_AZIMUTH = 180.0
-SUN_ALTITUDE = 30.0
+# Alt/az
+SUN_AZIMUTH = np.radians(0.0)
+SUN_ALTITUDE = np.radians(30.0)
 
 
 def main():
@@ -26,13 +26,13 @@ def main():
         ray = np.array([0.0, 0.0, 1.0])
         ray = np.array([
             ray[0],
-            np.cos(SUN_ALTITUDE) - np.sin(SUN_ALTITUDE),
-            np.sin(SUN_ALTITUDE) + np.cos(SUN_ALTITUDE)
+            ray[1] * np.cos(-SUN_ALTITUDE) - ray[2] * np.sin(-SUN_ALTITUDE),
+            ray[1] * np.sin(-SUN_ALTITUDE) + ray[2] * np.cos(-SUN_ALTITUDE)
         ])
         ray = np.array([
-            np.cos(SUN_AZIMUTH) - np.sin(SUN_AZIMUTH),
+            ray[0] * np.cos(-SUN_AZIMUTH) - ray[2] * np.sin(-SUN_AZIMUTH),
             ray[1],
-            np.sin(SUN_AZIMUTH) + np.cos(SUN_AZIMUTH)
+            ray[0] * np.sin(-SUN_AZIMUTH) + ray[2] * np.cos(-SUN_AZIMUTH)
         ])
 
         visible_triangles = []
@@ -43,7 +43,7 @@ def main():
                 visible_triangles.append(triangle_idx)
 
         if PLOT_EVERY_CRYSTAL:
-            halosim.plotting.plot_crystal(vertices, triangles)
+            halosim.plotting.plot_crystal(vertices, triangles, ray)
 
 if __name__ == '__main__':
     main()
