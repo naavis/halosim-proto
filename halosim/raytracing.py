@@ -37,7 +37,7 @@ def get_primary_intersection(vertices, triangles, normals, areas, ray):
         dot_product = np.dot(normal, ray)
         if dot_product > 0.0:
             visible_triangles_indices.append(triangle_idx)
-            projected_areas.append(np.cos(dot_product) * areas[triangle_idx])
+            projected_areas.append(dot_product * areas[triangle_idx])
 
     # Find intersection point using barycentric coordinates
     hit_triangle_idx = visible_triangles_indices[weighted_choice(projected_areas)]
