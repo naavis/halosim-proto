@@ -1,8 +1,8 @@
 import numpy as np
 
-import halosim.crystals
-import halosim.raytracing
-import halosim.plotting
+from halosim.crystals import generate_hexagonal_crystal
+from halosim.raytracing import generate_ray
+from halosim.plotting import plot_crystal
 
 NUM_RAYS = 5
 PLOT_EVERY_CRYSTAL = True
@@ -15,11 +15,12 @@ SUN_ALTITUDE = np.radians(30.0)
 def main():
     for ray_idx in range(NUM_RAYS):
         # Generate crystal
-        vertices, triangles, normals, areas = halosim.crystals.generate_hexagonal_crystal(0.01, 0.01,
-                                                                                          0.5 + np.random.randn() * 0.1)
+        rotation_std = 0.01
+        c_a_ratio = 0.5 + np.random.randn() * 0.01
+        vertices, triangles, normals, areas = generate_hexagonal_crystal(rotation_std, rotation_std, c_a_ratio)
 
         # Generate ray
-        ray = halosim.raytracing.generate_ray(SUN_AZIMUTH, SUN_ALTITUDE)
+        ray = generate_ray(SUN_AZIMUTH, SUN_ALTITUDE)
 
         # Find triangle to intersect
         visible_triangles_indices = []
@@ -32,7 +33,7 @@ def main():
                 projected_areas.append(np.cos(dot_product) * areas[triangle_idx])
 
         if PLOT_EVERY_CRYSTAL:
-            halosim.plotting.plot_crystal(vertices, triangles, ray)
+            plot_crystal(vertices, triangles, ray)
 
 
 if __name__ == '__main__':
