@@ -1,6 +1,8 @@
-import halosim.crystals
-import halosim.plotting
 import numpy as np
+
+import halosim.crystals
+import halosim.raytracing
+import halosim.plotting
 
 NUM_RAYS = 5
 PLOT_EVERY_CRYSTAL = True
@@ -13,10 +15,11 @@ SUN_ALTITUDE = np.radians(30.0)
 def main():
     for ray_idx in range(NUM_RAYS):
         # Generate crystal
-        vertices, triangles, normals, areas = halosim.crystals.generate_hexagonal_crystal(0.01, 0.01, 0.5)
+        vertices, triangles, normals, areas = halosim.crystals.generate_hexagonal_crystal(0.01, 0.01,
+                                                                                          0.5 + np.random.randn() * 0.1)
 
         # Generate ray
-        ray = generate_ray(SUN_AZIMUTH, SUN_ALTITUDE)
+        ray = halosim.raytracing.generate_ray(SUN_AZIMUTH, SUN_ALTITUDE)
 
         visible_triangles_indices = []
         for triangle_idx, triangle in enumerate(triangles):
@@ -27,24 +30,6 @@ def main():
 
         if PLOT_EVERY_CRYSTAL:
             halosim.plotting.plot_crystal(vertices, triangles, ray)
-
-
-def generate_ray(azimuth, altitude):
-    sun_diameter = 0.0087266  # 0.5 degrees in radians
-    azimuth = azimuth + np.random.rand() * sun_diameter - 0.5 * sun_diameter
-    altitude = altitude + np.random.rand() * sun_diameter - 0.5 * sun_diameter
-    ray = np.array([0.0, 0.0, 1.0])
-    ray = np.array([
-        ray[0],
-        ray[1] * np.cos(-altitude) - ray[2] * np.sin(-altitude),
-        ray[1] * np.sin(-altitude) + ray[2] * np.cos(-altitude)
-    ])
-    ray = np.array([
-        ray[0] * np.cos(-azimuth) - ray[2] * np.sin(-azimuth),
-        ray[1],
-        ray[0] * np.sin(-azimuth) + ray[2] * np.cos(-azimuth)
-    ])
-    return ray
 
 
 if __name__ == '__main__':
