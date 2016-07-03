@@ -2,7 +2,7 @@ import halosim.crystals
 import halosim.plotting
 import numpy as np
 
-NUM_RAYS = 1
+NUM_RAYS = 5
 PLOT_EVERY_CRYSTAL = True
 
 # Alt/az
@@ -12,14 +12,8 @@ SUN_ALTITUDE = np.radians(30.0)
 
 def main():
     for ray_idx in range(NUM_RAYS):
-        vertices, triangles = halosim.crystals.generate_hexagonal_crystal()
-
-        rotate_a = 0.01 * 2.0 * np.pi * np.random.randn()
-        rotate_b = 0.01 * 2.0 * np.pi * np.random.randn()
-        rotate_c = 2.0 * np.pi * np.random.rand()
-        vertices = halosim.crystals.rotate(vertices, rotate_a, rotate_b, rotate_c)
-
-        normals = halosim.crystals.get_normals(vertices, triangles)
+        # Generate crystal
+        vertices, triangles, normals, areas = halosim.crystals.generate_hexagonal_crystal(0.01, 0.01, 0.5)
 
         # Generate ray
         # Currently the ray is always the same; later on direction can be randomized on sun's disk.

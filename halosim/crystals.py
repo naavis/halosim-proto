@@ -1,14 +1,14 @@
 import numpy as np
 
 
-def generate_hexagonal_crystal():
+def generate_hexagonal_prototype_crystal():
     """
     Generate a hexagonal crystal.
     :return: 3xn array of vertex coordinates and nx3 array of vertex indices to indicate each triangle.
     """
     angles = 2.0 * np.pi * np.arange(0.0, 1.0, 1.0 / 6.0)
     vertices = np.array([np.cos(angles), np.sin(angles)])
-    height = 0.5
+    height = 1.0 # This should make c/a ration 1.0 by default
     xs = np.tile(vertices[0, :], 2)
     ys = np.concatenate((np.tile(height, 6), np.tile(-height, 6)))
     zs = np.tile(vertices[1, :], 2)
@@ -39,6 +39,39 @@ def generate_hexagonal_crystal():
     triangles[19] = [1, 6, 7]
 
     return np.array([xs, ys, zs]), triangles
+
+
+def generate_hexagonal_crystal(rot_a_std, rot_b_std, c_a_ratio):
+    # Generate prototype hexagonal crystal with c/a ratio of 1.0 and c axis parallel to y coordinate axis.
+    vertices, triangles = generate_hexagonal_prototype_crystal()
+
+    # Calculate areas
+    areas = np.zeros((triangles.shape[0],))
+    # Basal faces
+    big_basal_area = 0.5 * np.sqrt(3.0)
+    small_basal_area = 0.5 * (1.5 * np.sqrt(3.0) - 2.0 * big_basal_area)
+    areas[0] = small_basal_area
+    areas[1] = big_basal_area
+    areas[2] = big_basal_area
+    areas[3] = small_basal_area
+    areas[4] = small_basal_area
+    areas[5] = big_basal_area
+    areas[6] = big_basal_area
+    areas[7] = small_basal_area
+    # Prism faces
+    areas[8:] = 0.5 * c_a_ratio
+
+    # Rotate vertices of crystal
+    vertices[1, :] = c_a_ratio * vertices[1, :]
+    rotate_a = rot_a_std * 2.0 * np.pi * np.random.randn()
+    rotate_b = rot_b_std * 2.0 * np.pi * np.random.randn()
+    rotate_c = 2.0 * np.pi * np.random.rand()
+    vertices = rotate(vertices, rotate_a, rotate_b, rotate_c)
+
+    # Calculate normals of crystal
+    normals = get_normals(vertices, triangles)
+
+    return vertices, triangles, normals, areas
 
 
 def rotate(vertices, rotate_a, rotate_b, rotate_c):
