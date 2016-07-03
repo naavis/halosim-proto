@@ -3,12 +3,12 @@ import numpy as np
 
 def generate_hexagonal_prototype_crystal():
     """
-    Generate a hexagonal crystal.
+    Generate a hexagonal prototype crystal with a c/a ratio of 1.0 and c axis parallel to the y coordinate axis.
     :return: 3xn array of vertex coordinates and nx3 array of vertex indices to indicate each triangle.
     """
     angles = 2.0 * np.pi * np.arange(0.0, 1.0, 1.0 / 6.0)
     vertices = np.array([np.cos(angles), np.sin(angles)])
-    height = 1.0 # This should make c/a ration 1.0 by default
+    height = 1.0  # This should make c/a ration 1.0 by default
     xs = np.tile(vertices[0, :], 2)
     ys = np.concatenate((np.tile(height, 6), np.tile(-height, 6)))
     zs = np.tile(vertices[1, :], 2)
