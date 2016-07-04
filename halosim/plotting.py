@@ -1,5 +1,6 @@
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection, Line3DCollection
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_crystal(vertices, triangles, ray=None, point=None, highlight_triangle=None):
@@ -26,6 +27,25 @@ def plot_crystal(vertices, triangles, ray=None, point=None, highlight_triangle=N
 
     if point is not None:
         ax.scatter(point[2], point[0], point[1], color='r')
+
+    ax.set_xlim(-1.0, 1.0)
+    ax.set_ylim(-1.0, 1.0)
+    ax.set_zlim(-1.0, 1.0)
+    ax.set_xlabel('z')
+    ax.set_ylabel('x')
+    ax.set_zlabel('y')
+    ax.set_aspect('equal')
+    fig.tight_layout()
+
+    plt.show()
+
+
+def plot_outgoing_rays(rays):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+
+    norm_rays = rays / np.linalg.norm(rays, axis=0)
+    ax.scatter(norm_rays[2, :], norm_rays[0, :], norm_rays[1, :], marker='.', depthshade=False)
 
     ax.set_xlim(-1.0, 1.0)
     ax.set_ylim(-1.0, 1.0)
