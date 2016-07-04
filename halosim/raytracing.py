@@ -73,34 +73,42 @@ def weighted_choice(weights):
             return i
 
 
-def get_reflectivity(normal, incident_ray):
+def get_reflectivity(normal, incident_ray, n1, n2):
     """
     Calculate reflectivity given a normal vector and an incident direction vector.
+    :param n1: Refractive index of the first material.
+    :param n2: Refractive index of the second material.
     :param normal: Normal vector for surface.
     :param incident_ray: Vector denoting direction of incident light.
     :return: Incident angle, reflectivity and transmitted angle.
     """
     incident_angle = np.arccos(np.dot(-incident_ray, normal))
-    transmitted_angle = np.arcsin(np.sin(incident_angle) / 1.31)
-    reflectivity_parallel = np.square(np.cos(incident_angle) - 1.31 * np.cos(transmitted_angle) / (
-        np.cos(incident_angle) + 1.31 * np.cos(transmitted_angle)))
-    reflectivity_perpendicular = np.square(np.cos(transmitted_angle) - 1.31 * np.cos(incident_angle) / (
-        np.cos(transmitted_angle) + 1.31 * np.cos(incident_angle)))
-    reflectivity = np.minimum(1.0, 0.5 * (reflectivity_parallel + reflectivity_perpendicular))
+    if n2 / n1 < np.sin(incident_angle):
+        transmitted_angle = None
+        reflectivity = 1.0
+        return incident_angle, reflectivity, transmitted_angle
+    transmitted_angle = np.arcsin(n1 * np.sin(incident_angle) / n2)
+    reflectivity_parallel = np.square(n1 * np.cos(incident_angle) - n2 * np.cos(transmitted_angle) / (
+        n1 * np.cos(incident_angle) + n2 * np.cos(transmitted_angle)))
+    reflectivity_perpendicular = np.square(n1 * np.cos(transmitted_angle) - n2 * np.cos(incident_angle) / (
+        n1 * np.cos(transmitted_angle) + n2 * np.cos(incident_angle)))
+    reflectivity = 0.5 * (reflectivity_parallel + reflectivity_perpendicular)
     return incident_angle, reflectivity, transmitted_angle
 
 
-def get_refraction_vector(normal, incident_angle, transmitted_angle, incident_ray):
+def get_refraction_vector(normal, incident_angle, transmitted_angle, incident_ray, n1, n2):
     """
     Calculate refracted ray.
+    :param n1: Refractive index of the first material.
+    :param n2: Refractive index of the second material.
     :param normal: Surface normal.
     :param incident_angle: Incident ray angle.
     :param transmitted_angle: Transmitted ray angle.
     :param incident_ray: Incident ray.
     :return: Refracted ray.
     """
-    normal_factor = np.cos(incident_angle) / 1.31 - np.sqrt(1.0 - np.square(np.sin(transmitted_angle)))
-    refraction_vector = normal_factor * normal + incident_ray / 1.31
+    normal_factor = n1 * np.cos(incident_angle) / n2 - np.sqrt(1.0 - np.square(np.sin(transmitted_angle)))
+    refraction_vector = n1 * normal_factor * normal + incident_ray / n2
     refraction_vector /= np.linalg.norm(refraction_vector)
     return refraction_vector
 
