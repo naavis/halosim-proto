@@ -2,6 +2,13 @@ import numpy as np
 
 
 def generate_primary_ray(azimuth, altitude):
+    """
+    Generate primary rays pointing to the sun/moon based on sun's
+    azimuth and altitude. Point on the sun's disk is randomized.
+    :param azimuth:
+    :param altitude:
+    :return:
+    """
     sun_diameter = 0.0087266  # 0.5 degrees in radians
     azimuth = azimuth + np.random.rand() * sun_diameter - 0.5 * sun_diameter
     altitude = altitude + np.random.rand() * sun_diameter - 0.5 * sun_diameter
