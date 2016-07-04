@@ -34,9 +34,16 @@ def main():
             np.cos(transmitted_angle) + np.cos(incident_angle)))
         reflectivity = 0.5 * (reflectivity_parallel + reflectivity_perpendicular)
         if np.random.rand() < reflectivity:
-            pass  # Reflect
+            # Reflect
+            reflection_vector = 2.0 * np.cos(incident_angle) * hit_triangle_normal - sun_direction
+            reflection_vector /= np.linalg.norm(reflection_vector)
+            # TODO: Record ray direction
         else:
-            pass  # Refract
+            # Refract
+            normal_factor = np.cos(incident_angle) / 1.31 - np.sqrt(
+                1.0 - np.square(np.sin(transmitted_angle)))
+            refraction_vector = normal_factor * hit_triangle_normal - sun_direction / 1.31
+            # TODO: Trace ray until it exits the crystal and then record direction
 
         if PLOT_EVERY_CRYSTAL:
             plot_crystal(vertices, triangles, sun_direction, highlight_triangle=hit_triangle_index, point=intersection)
