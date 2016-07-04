@@ -68,8 +68,8 @@ def generate_hexagonal_crystal(rot_a_std, rot_b_std, c_a_ratio):
     areas /= np.sum(areas)
 
     # Rotate vertices of crystal
-    rotate_a = rot_a_std * 2.0 * np.pi * np.random.randn()
-    rotate_b = rot_b_std * 2.0 * np.pi * np.random.randn()
+    rotate_a = rot_a_std * np.random.randn()
+    rotate_b = rot_b_std * np.random.randn()
     rotate_c = 2.0 * np.pi * np.random.rand()
     vertices = rotate(vertices, rotate_a, rotate_b, rotate_c)
 

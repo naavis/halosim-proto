@@ -3,11 +3,11 @@ import numpy as np
 
 def generate_primary_ray(azimuth, altitude):
     """
-    Generate primary rays pointing to the sun/moon based on sun's
+    Generate incident primary ray from the sun/moon based on sun's
     azimuth and altitude. Point on the sun's disk is randomized.
-    :param azimuth:
-    :param altitude:
-    :return:
+    :param azimuth: Sun azimuth.
+    :param altitude: Sun altitude.
+    :return: Incident light ray.
     """
     sun_diameter = 0.0087266  # 0.5 degrees in radians
     azimuth = azimuth + np.random.rand() * sun_diameter - 0.5 * sun_diameter
@@ -23,7 +23,7 @@ def generate_primary_ray(azimuth, altitude):
         ray[1],
         ray[0] * np.sin(-azimuth) + ray[2] * np.cos(-azimuth)
     ])
-    return ray
+    return -ray
 
 
 def get_primary_intersection(vertices, triangles, normals, areas, ray):
@@ -33,7 +33,7 @@ def get_primary_intersection(vertices, triangles, normals, areas, ray):
     :param triangles: nx3 array of vertex indices.
     :param normals: 3xn array of normals.
     :param areas: Array of triangle areas.
-    :param ray: Ray pointing towards light source.
+    :param ray: Incident ray.
     :return: Index of hit triangle and exact point of intersection.
     """
     # Find triangle to intersect
@@ -41,7 +41,7 @@ def get_primary_intersection(vertices, triangles, normals, areas, ray):
     projected_areas = []
     for triangle_idx, triangle in enumerate(triangles):
         normal = normals[:, triangle_idx]
-        dot_product = np.dot(normal, ray)
+        dot_product = np.dot(normal, -ray)
         if dot_product > 0.0:
             visible_triangles_indices.append(triangle_idx)
             projected_areas.append(dot_product * areas[triangle_idx])
@@ -71,18 +71,18 @@ def weighted_choice(weights):
             return i
 
 
-def get_reflectivity(normal, incident_vector):
+def get_reflectivity(normal, incident_ray):
     """
     Calculate reflectivity given a normal vector and an incident direction vector.
     :param normal: Normal vector for surface.
-    :param incident_vector: Vector denoting direction of incident light (note: points away from surface).
+    :param incident_ray: Vector denoting direction of incident light.
     :return: Incident angle, reflectivity and transmitted angle.
     """
-    incident_angle = np.arccos(np.dot(incident_vector, normal))
+    incident_angle = np.arccos(np.dot(-incident_ray, normal))
     transmitted_angle = np.arcsin(np.sin(incident_angle) / 1.31)
     reflectivity_parallel = np.square(np.cos(incident_angle) - 1.31 * np.cos(transmitted_angle) / (
-        np.cos(incident_angle) + np.cos(transmitted_angle)))
+        np.cos(incident_angle) + 1.31 * np.cos(transmitted_angle)))
     reflectivity_perpendicular = np.square(np.cos(transmitted_angle) - 1.31 * np.cos(incident_angle) / (
-        np.cos(transmitted_angle) + np.cos(incident_angle)))
+        np.cos(transmitted_angle) + 1.31 * np.cos(incident_angle)))
     reflectivity = np.minimum(1.0, 0.5 * (reflectivity_parallel + reflectivity_perpendicular))
     return incident_angle, reflectivity, transmitted_angle

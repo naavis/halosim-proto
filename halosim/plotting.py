@@ -26,7 +26,7 @@ def plot_crystal(vertices, triangles, ray=None, point=None, highlight_triangle=N
         ax.plot([0.0, 3.0 * ray[2]], [0.0, 3.0 * ray[0]], [0.0, 3.0 * ray[1]], color='k')
 
     if point is not None:
-        ax.scatter(point[2], point[0], point[1], color='r')
+        ax.scatter(point[2], point[0], point[1], color='r', depthshade=False)
 
     ax.set_xlim(-1.0, 1.0)
     ax.set_ylim(-1.0, 1.0)
@@ -40,12 +40,26 @@ def plot_crystal(vertices, triangles, ray=None, point=None, highlight_triangle=N
     plt.show()
 
 
-def plot_outgoing_rays(rays):
+def plot_outgoing_rays(rays, sun_azimuth, sun_altitude):
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
     norm_rays = rays / np.linalg.norm(rays, axis=0)
-    ax.scatter(norm_rays[2, :], norm_rays[0, :], norm_rays[1, :], marker='.', depthshade=False)
+    ax.scatter(norm_rays[2, :], norm_rays[0, :], norm_rays[1, :], marker='.', depthshade=False, s=1)
+
+    sun_direction = np.array([0.0, 0.0, 1.0])
+    sun_direction = np.array([
+        sun_direction[0],
+        sun_direction[1] * np.cos(-sun_altitude) - sun_direction[2] * np.sin(-sun_altitude),
+        sun_direction[1] * np.sin(-sun_altitude) + sun_direction[2] * np.cos(-sun_altitude)
+    ])
+    sun_direction = np.array([
+        sun_direction[0] * np.cos(-sun_azimuth) - sun_direction[2] * np.sin(-sun_azimuth),
+        sun_direction[1],
+        sun_direction[0] * np.sin(-sun_azimuth) + sun_direction[2] * np.cos(-sun_azimuth)
+    ])
+
+    ax.scatter(sun_direction[2], sun_direction[0], sun_direction[1], s=50, depthshade=False, c='r')
 
     ax.set_xlim(-1.0, 1.0)
     ax.set_ylim(-1.0, 1.0)
