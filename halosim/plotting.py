@@ -45,7 +45,7 @@ def plot_outgoing_rays(rays, sun_azimuth, sun_altitude):
     ax = fig.add_subplot(111, projection='3d')
 
     norm_rays = rays / np.linalg.norm(rays, axis=0)
-    ax.scatter(norm_rays[2, :], norm_rays[0, :], norm_rays[1, :], marker='.', depthshade=False, s=1)
+    ax.scatter(norm_rays[2, :], norm_rays[0, :], norm_rays[1, :], marker='.', depthshade=True, s=1)
 
     sun_direction = np.array([0.0, 0.0, 1.0])
     sun_direction = np.array([

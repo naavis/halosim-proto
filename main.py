@@ -10,16 +10,19 @@ PLOT_EVERY_CRYSTAL = False
 
 # Alt/az
 SUN_AZIMUTH = np.radians(0.0)
-SUN_ALTITUDE = np.radians(30.0)
+SUN_ALTITUDE = np.radians(50.0)
 
 
 def main():
     outgoing_rays = np.zeros((3, NUM_RAYS))
     for ray_idx in range(NUM_RAYS):
         # Generate crystal
-        rotation_std = np.radians(1.0)
-        c_a_ratio = 0.25 + np.random.randn() * 0.01
-        vertices, triangles, normals, areas = generate_hexagonal_crystal(rotation_std, rotation_std, c_a_ratio)
+        rot_a = np.radians(90.0)
+        rot_a_std = np.radians(1.0)
+        rot_b = np.radians(0.0)
+        rot_b_std = np.radians(180.0)
+        c_a_ratio = 2.0 + np.random.randn() * 0.01
+        vertices, triangles, normals, areas = generate_hexagonal_crystal(rot_a, rot_a_std, rot_b, rot_b_std, c_a_ratio)
 
         # Generate ray
         ray_direction = generate_primary_ray(SUN_AZIMUTH, SUN_ALTITUDE)
