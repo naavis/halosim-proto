@@ -62,3 +62,20 @@ def weighted_choice(weights):
         rnd -= w
         if rnd < 0:
             return i
+
+
+def get_reflectivity(normal, light_direction):
+    """
+    Calculate reflectivity given a normal vector and a light direction vector.
+    :param normal: Normal vector for surface.
+    :param light_direction: Vector pointing to light source.
+    :return: Incident angle, reflectivity and transmitted angle.
+    """
+    incident_angle = np.arccos(np.dot(light_direction, normal))
+    transmitted_angle = np.arcsin(np.sin(incident_angle) / 1.31)
+    reflectivity_parallel = np.square(np.cos(incident_angle) - 1.31 * np.cos(transmitted_angle) / (
+        np.cos(incident_angle) + np.cos(transmitted_angle)))
+    reflectivity_perpendicular = np.square(np.cos(transmitted_angle) - 1.31 * np.cos(incident_angle) / (
+        np.cos(transmitted_angle) + np.cos(incident_angle)))
+    reflectivity = 0.5 * (reflectivity_parallel + reflectivity_perpendicular)
+    return incident_angle, reflectivity, transmitted_angle

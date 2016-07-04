@@ -2,7 +2,7 @@ import numpy as np
 
 from halosim.crystals import generate_hexagonal_crystal
 from halosim.plotting import plot_crystal
-from halosim.raytracing import generate_primary_ray, get_primary_intersection
+from halosim.raytracing import generate_primary_ray, get_primary_intersection, get_reflectivity
 
 NUM_RAYS = 10
 PLOT_EVERY_CRYSTAL = True
@@ -26,13 +26,7 @@ def main():
         hit_triangle_index, intersection = get_primary_intersection(vertices, triangles, normals, areas, sun_direction)
         hit_triangle_normal = normals[:, hit_triangle_index]
 
-        incident_angle = np.arccos(np.dot(sun_direction, hit_triangle_normal))
-        transmitted_angle = np.arcsin(np.sin(incident_angle) / 1.31)
-        reflectivity_parallel = np.square(np.cos(incident_angle) - 1.31 * np.cos(transmitted_angle) / (
-            np.cos(incident_angle) + np.cos(transmitted_angle)))
-        reflectivity_perpendicular = np.square(np.cos(transmitted_angle) - 1.31 * np.cos(incident_angle) / (
-            np.cos(transmitted_angle) + np.cos(incident_angle)))
-        reflectivity = 0.5 * (reflectivity_parallel + reflectivity_perpendicular)
+        incident_angle, reflectivity, transmitted_angle = get_reflectivity(hit_triangle_normal, sun_direction)
         if np.random.rand() < reflectivity:
             # Reflect
             reflection_vector = 2.0 * np.cos(incident_angle) * hit_triangle_normal - sun_direction
