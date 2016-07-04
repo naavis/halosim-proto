@@ -108,7 +108,7 @@ def get_refraction_vector(normal, incident_angle, transmitted_angle, incident_ra
     :return: Refracted ray.
     """
     normal_factor = n1 * np.cos(incident_angle) / n2 - np.sqrt(1.0 - np.square(np.sin(transmitted_angle)))
-    refraction_vector = n1 * normal_factor * normal + incident_ray / n2
+    refraction_vector = normal_factor * normal + n1 * incident_ray / n2
     refraction_vector /= np.linalg.norm(refraction_vector)
     return refraction_vector
 
