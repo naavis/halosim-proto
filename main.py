@@ -18,7 +18,7 @@ def main():
     for ray_idx in range(NUM_RAYS):
         # Generate crystal
         rotation_std = np.radians(2.0)
-        c_a_ratio = 0.5 + np.random.randn() * 0.01
+        c_a_ratio = 0.25 + np.random.randn() * 0.01
         vertices, triangles, normals, areas = generate_hexagonal_crystal(rotation_std, rotation_std, c_a_ratio)
 
         # Generate ray
@@ -85,7 +85,7 @@ def ray_crystal_intersection(vertices, triangles, ray_origin, ray_direction):
 
 def ray_triangle_intersection(triangle_vertices, ray_origin, ray_direction):
     """
-    Ray-triangle intersection using Trumbore-Möller algorithm.
+    Ray-triangle intersection using Möller-Trumbore algorithm.
     :param triangle_vertices: 3x3 array of vertex coordinates.
     :param ray_origin: Vector corresponding to the ray origin.
     :param ray_direction: Unit vector corresponding to the ray direction.
