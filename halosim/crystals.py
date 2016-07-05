@@ -41,11 +41,20 @@ def generate_hexagonal_prototype_crystal():
     return np.array([xs, ys, zs]), triangles
 
 
-def generate_hexagonal_crystal(rot_a, rot_a_std, rot_b, rot_b_std, c_a_ratio):
-    # Generate prototype hexagonal crystal with c/a ratio of 1.0 and c axis parallel to y coordinate axis.
+def generate_hexagonal_crystal(rot_a, rot_a_std, rot_b, rot_b_std, c_a_ratio, c_a_ratio_std):
+    """
+    Generate a hexagonal crystal with given rotation properties and c/a ratio.
+    :param rot_a: Rotation around a axis.
+    :param rot_a_std: Standard deviation of a axis rotation.
+    :param rot_b: Rotation around b axis.
+    :param rot_b_std: Standard deviation of b axis rotation.
+    :param c_a_ratio: c/a ratio of crystal.
+    :param c_a_ratio_std: Standard deviation of c/a ratio.
+    :return:
+    """
     vertices, triangles = generate_hexagonal_prototype_crystal()
 
-    vertices[1, :] = c_a_ratio * vertices[1, :]
+    vertices[1, :] = (c_a_ratio + c_a_ratio_std * np.random.randn()) * vertices[1, :]
     vertices /= vertices.max()
 
     # Calculate areas

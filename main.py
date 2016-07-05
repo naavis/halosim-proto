@@ -15,14 +15,16 @@ SUN_ALTITUDE = np.radians(50.0)
 
 def main():
     outgoing_rays = np.zeros((3, NUM_RAYS))
+    rot_a = np.radians(90.0)
+    rot_a_std = np.radians(1.0)
+    rot_b = np.radians(0.0)
+    rot_b_std = np.radians(180.0)
+    c_a_ratio = 2.0
+    c_a_ratio_std = 0.01
     for ray_idx in range(NUM_RAYS):
         # Generate crystal
-        rot_a = np.radians(90.0)
-        rot_a_std = np.radians(1.0)
-        rot_b = np.radians(0.0)
-        rot_b_std = np.radians(180.0)
-        c_a_ratio = 2.0 + np.random.randn() * 0.01
-        vertices, triangles, normals, areas = generate_hexagonal_crystal(rot_a, rot_a_std, rot_b, rot_b_std, c_a_ratio)
+        vertices, triangles, normals, areas = generate_hexagonal_crystal(rot_a, rot_a_std, rot_b, rot_b_std, c_a_ratio,
+                                                                         c_a_ratio_std)
 
         # Generate ray
         ray_direction = generate_primary_ray(SUN_AZIMUTH, SUN_ALTITUDE)
@@ -55,7 +57,8 @@ def main():
                     ray_direction = get_reflection_vector(hit_normal, incident_angle, ray_direction)
                     ray_origin = intersection
                 else:
-                    outgoing_rays[:, ray_idx] = -get_refraction_vector(hit_normal, incident_angle, transmitted_angle, ray_direction, 1.31, 1.0)
+                    outgoing_rays[:, ray_idx] = -get_refraction_vector(hit_normal, incident_angle, transmitted_angle,
+                                                                       ray_direction, 1.31, 1.0)
                     inside_crystal = False
 
     plot_outgoing_rays(outgoing_rays, SUN_AZIMUTH, SUN_ALTITUDE)
