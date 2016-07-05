@@ -5,7 +5,7 @@ import numpy as np
 
 def plot_crystal(vertices, triangles, ray=None, point=None, highlight_triangle=None):
     """
-    Plot given crystal.
+    Plot given crystal, and possibly direction of incident ray.
     :param highlight_triangle: Highlight triangle with given index.
     :param point: Show point in plot.
     :param vertices: 3xn array of vertex coordinates.
@@ -41,6 +41,12 @@ def plot_crystal(vertices, triangles, ray=None, point=None, highlight_triangle=N
 
 
 def plot_outgoing_rays(rays, sun_azimuth, sun_altitude):
+    """
+    Plot simulation results on unit sphere.
+    :param rays: 3xn array of rays.
+    :param sun_azimuth: Sun azimuth in radians.
+    :param sun_altitude: Sun altitude in radians.
+    """
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 

@@ -15,6 +15,7 @@ SUN_ALTITUDE = np.radians(50.0)
 
 def main():
     outgoing_rays = np.zeros((3, NUM_RAYS))
+    # Crystal population parameters
     rot_a = np.radians(90.0)
     rot_a_std = np.radians(1.0)
     rot_b = np.radians(0.0)
@@ -26,7 +27,7 @@ def main():
         vertices, triangles, normals, areas = generate_hexagonal_crystal(rot_a, rot_a_std, rot_b, rot_b_std, c_a_ratio,
                                                                          c_a_ratio_std)
 
-        # Generate ray
+        # Generate primary ray
         ray_direction = generate_primary_ray(SUN_AZIMUTH, SUN_ALTITUDE)
 
         # Find primary ray intersection point
@@ -38,11 +39,11 @@ def main():
 
         incident_angle, reflectivity, transmitted_angle = get_reflectivity(hit_normal, ray_direction, 1.0, 1.31)
         if np.random.rand() < reflectivity:
-            # Reflect
+            # Ray reflected off an outer face of the crystal
             reflection_vector = get_reflection_vector(hit_normal, incident_angle, ray_direction)
             outgoing_rays[:, ray_idx] = -reflection_vector
         else:
-            # Refract
+            # Ray refracted, start tracing ray inside crystal
             refraction_vector = get_refraction_vector(hit_normal, incident_angle, transmitted_angle,
                                                       ray_direction, 1.0, 1.31)
             inside_crystal = True
@@ -54,9 +55,11 @@ def main():
                 hit_normal = normals[:, triangle_index]
                 incident_angle, reflectivity, transmitted_angle = get_reflectivity(hit_normal, ray_direction, 1.31, 1.0)
                 if np.random.rand() < reflectivity:
+                    # Ray reflected off an inside face of the crystal, keep tracing
                     ray_direction = get_reflection_vector(hit_normal, incident_angle, ray_direction)
                     ray_origin = intersection
                 else:
+                    # Ray refracted out of the crystal
                     outgoing_rays[:, ray_idx] = -get_refraction_vector(hit_normal, incident_angle, transmitted_angle,
                                                                        ray_direction, 1.31, 1.0)
                     inside_crystal = False
