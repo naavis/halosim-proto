@@ -3,7 +3,7 @@ import sys
 import numpy as np
 
 
-def generate_primary_ray(azimuth, altitude):
+def generate_primary_ray(sun_azimuth, sun_altitude):
     """
     Generate incident primary ray from the sun/moon based on sun's
     azimuth and altitude. Point on the sun's disk is randomized.
@@ -12,8 +12,11 @@ def generate_primary_ray(azimuth, altitude):
     :return: Incident light ray.
     """
     sun_diameter = 0.0087266  # 0.5 degrees in radians
-    azimuth = azimuth + np.random.rand() * sun_diameter - 0.5 * sun_diameter
-    altitude = altitude + np.random.rand() * sun_diameter - 0.5 * sun_diameter
+    # Get uniform random point on sun disk
+    unit_disk_angle = np.random.rand() * 2.0 * np.pi
+    unit_disk_distance = np.sqrt(np.random.rand()) * 0.5 * sun_diameter
+    azimuth = sun_azimuth + unit_disk_distance * np.cos(unit_disk_angle)
+    altitude = sun_altitude + unit_disk_distance * np.sin(unit_disk_angle)
     ray = np.array([0.0, 0.0, 1.0])
     ray = np.array([
         ray[0],
